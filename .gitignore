@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Files only used for helping me with the homework
+/homework
