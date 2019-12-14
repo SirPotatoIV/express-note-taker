@@ -73,39 +73,43 @@ app.post("/api/notes", function(req, res){
     // A new note is created so increase the note id by 1.
     noteIdMaker++;
     newNote.id = noteIdMaker;
-    // gets the data from db.json
+    // If the site is starting with db.json empty it will go to the else statement.
+    // If this is the site adding a new Note it will create a new note.
     if(newNote){
-    fs.readFile('db/db.json', 'utf8', function(err, notesStringified){
-        if(err){
-            console.log(`Error occurred during readfile in post notes: ${err}`)
-            return
-        }
-        console.log(`Current Notes: ${notesStringified}`)
-        // Parses the data from db.json and stores it in notes.
-        if(notesStringified){
-            console.log(`if statement occured`)
-            const notes = [JSON.parse(notesStringified)]
-            // Combines new note and current notes into a single array by spreading notes into a new array called combined notes and adding newNote.
-            const combinedNotes = [...notes,newNote]
-            // Stringifies combined notes so it can be stored as db.json
-            updatedNotesStringified = JSON.stringify(combinedNotes);
-            // Writes over previous db.json with new db.json data.
-        }else{
-            updatedNotesStringified = JSON.stringify(newNote);
-        }
-
-        fs.writeFile('db/db.json', updatedNotesStringified, function(err){
+        console.log(`New note detected: ${newNote}`)
+            // gets the data from db.json
+        fs.readFile('db/db.json', 'utf8', function(err, notesStringified){
             if(err){
-                console.log(err)
+                console.log(`Error occurred during readfile in post notes: ${err}`)
                 return
             }
-            
-            // Homework says to send the new note back to the note.html, but currently unsure what it does with it. Possibly just used for tracking or troubleshooting purposes
-            res.send(newNote);
+            console.log(`Current Notes: ${notesStringified}`)
+            // If notes already exist, this will be used to add to the current notes.
+            if(notesStringified){
+                const notes = JSON.parse(notesStringified)
+                console.log(`A note already exists`)
+                // Parses the data from db.json and stores it in notes.
+                // Combines new note and current notes into a single array by spreading notes into a new array called combined notes and adding newNote.
+                const combinedNotes = [...notes,newNote]
+                // Stringifies combined notes so it can be stored as db.json
+                updatedNotesStringified = JSON.stringify(combinedNotes);
+                // Writes over previous db.json with new db.json data.
+            }else{
+                updatedNotesStringified = [JSON.stringify(newNote)];
+            }
+
+            fs.writeFile('db/db.json', updatedNotesStringified, function(err){
+                if(err){
+                    console.log(err)
+                    return
+                }
+                
+                // Homework says to send the new note back to the note.html, but currently unsure what it does with it. Possibly just used for tracking or troubleshooting purposes
+                res.send(newNote);
+            });
         });
-    });
 }else{
-    res.send("No saved notes")
+    res.send("[]")
 }
 })
 
