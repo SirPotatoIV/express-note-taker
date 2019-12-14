@@ -104,15 +104,17 @@ var handleRenderSaveBtn = function() {
 };
 
 // Render's the list of note titles
+// Changed from notes to notesStringified to indicate it was recieving a stringified JSON.
 const renderNoteList = function(notesStringified) {
   $noteList.empty();
+  // Added because there was no point when the index.js pasrsed the JSON
   notes = JSON.parse(notesStringified)
   let noteListItems = [];
 
   for (let i = 0; i < notes.length; i++) {
     const note = notes[i];
 
-    const $li = $("<li class='list-group-item'>").data(note);
+    const $li = $(`<li class='list-group-item' id=${note.id}>`).data(note);
     const $span = $("<span>").text(note.title);
     const $delBtn = $(
       "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
