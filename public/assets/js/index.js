@@ -1,14 +1,14 @@
-var $noteTitle = $(".note-title");
-var $noteText = $(".note-textarea");
-var $saveNoteBtn = $(".save-note");
-var $newNoteBtn = $(".new-note");
-var $noteList = $(".list-container .list-group");
+const $noteTitle = $(".note-title");
+const $noteText = $(".note-textarea");
+const $saveNoteBtn = $(".save-note");
+const $newNoteBtn = $(".new-note");
+const $noteList = $(".list-container .list-group");
 
 // activeNote is used to keep track of the note in the textarea
-var activeNote = {};
+let activeNote = {};
 
 // A function for getting all notes from the db
-var getNotes = function() {
+const getNotes = function() {
   return $.ajax({
     url: "/api/notes",
     method: "GET"
@@ -104,17 +104,17 @@ var handleRenderSaveBtn = function() {
 };
 
 // Render's the list of note titles
-var renderNoteList = function(notes) {
+const renderNoteList = function(notesStringified) {
   $noteList.empty();
+  notes = JSON.parse(notesStringified)
+  let noteListItems = [];
 
-  var noteListItems = [];
+  for (let i = 0; i < notes.length; i++) {
+    const note = notes[i];
 
-  for (var i = 0; i < notes.length; i++) {
-    var note = notes[i];
-
-    var $li = $("<li class='list-group-item'>").data(note);
-    var $span = $("<span>").text(note.title);
-    var $delBtn = $(
+    const $li = $("<li class='list-group-item'>").data(note);
+    const $span = $("<span>").text(note.title);
+    const $delBtn = $(
       "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
     );
 
@@ -126,7 +126,7 @@ var renderNoteList = function(notes) {
 };
 
 // Gets notes from the db and renders them to the sidebar
-var getAndRenderNotes = function() {
+const getAndRenderNotes = function() {
   return getNotes().then(function(data) {
     renderNoteList(data);
   });
