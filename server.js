@@ -6,6 +6,9 @@ const express = require("express");
 const path = require("path");
 const app = express();
 
+// This number will be increased by one every time a new note is created.
+let noteIdMaker = 0;
+
 // Set the port. process.env.PORT is for heroku, 3000 is for local testing purposes
 const PORT = process.env.PORT || 3000;
 
@@ -65,34 +68,41 @@ app.get("/api/notes", function(req, res){
 //   * POST `/api/notes` - Should recieve a new note to save on the request body, add it to the `db.json` file, and then return the new note to the client.
 // Probably a better way to get the new note added in with like lastIndex of so I didn't need to do so much JSON, but this works.
 app.post("/api/notes", function(req, res){
-    const newNotes = req.body;
+    const newNote = req.body;
+    // A new note is created so increase the note id by 1.
+    noteIdMaker++;
+    newNote.id = noteIdMaker;
     fs.readFile('db/db.json', 'utf8', function(err, notesStringified){
         if(err){
             console.log(err)
             return
         }
         const notes = JSON.parse(notesStringified)
-        const combinedNotes = [...notes,newNotes]
+        const combinedNotes = [...notes,newNote]
         const combinedNotesStringified = JSON.stringify(combinedNotes);
         fs.writeFile('db/db.json', combinedNotesStringified, function(err){
             if(err){
                 console.log(err)
                 return
             }
-            // sends data in db to site. readFile already turns db data into a string, so no need for req.json
-            res.send(newNotes);
+            
+            // Homework says to send the new note back to the note.html, but currently unsure what it does with it
+            res.send(newNote);
         });
     });
     
     // console.log(req.body)
 })
+//   * DELETE `/api/notes/:id` - Should recieve a query paramter containing the id of a note to delete. 
+// This means you'll need to find a way to give each note a unique `id` when it's saved. 
+// In order to delete a note, you'll need to read all notes from the `db.json` file, remove the note with the given `id` property, 
+// and then rewrite the notes to the `db.json` file.
 
 
 // * The following API routes should be created:
 
 
 
-//   * DELETE `/api/notes/:id` - Should recieve a query paramter containing the id of a note to delete. This means you'll need to find a way to give each note a unique `id` when it's saved. In order to delete a note, you'll need to read all notes from the `db.json` file, remove the note with the given `id` property, and then rewrite the notes to the `db.json` file.
 
 
 
