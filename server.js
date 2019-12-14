@@ -86,14 +86,23 @@ app.post("/api/notes", function(req, res){
                 return
             }
             
-            // Homework says to send the new note back to the note.html, but currently unsure what it does with it
+            // Homework says to send the new note back to the note.html, but currently unsure what it does with it. Possibly just used for tracking or troubleshooting purposes
             res.send(newNote);
         });
     });
     
     // console.log(req.body)
 })
-//   * DELETE `/api/notes/:id` - Should recieve a query paramter containing the id of a note to delete. 
+
+//   * DELETE `/api/notes/:id` - Should recieve a query paramter containing the id of a note to delete.
+// :id stores the value in the path in the property of req.params. This is feature of express ... I think
+app.delete('/api/notes/:id', function (req, res) {
+    // Stores the of the note that should be deleted.
+    const noteToDelete = req.params.id;
+    console.log(noteToDelete)
+    // Sends a response back to the page that the delete request was completed
+    res.send('Got a DELETE request at /user')
+  })
 // This means you'll need to find a way to give each note a unique `id` when it's saved. 
 // In order to delete a note, you'll need to read all notes from the `db.json` file, remove the note with the given `id` property, 
 // and then rewrite the notes to the `db.json` file.

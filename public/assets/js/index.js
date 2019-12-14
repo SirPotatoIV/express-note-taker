@@ -113,7 +113,7 @@ const renderNoteList = function(notesStringified) {
 
   for (let i = 0; i < notes.length; i++) {
     const note = notes[i];
-
+    // note.id is a unique id for the note that is stored with the note in db. This will be used to delete the note.
     const $li = $(`<li class='list-group-item' id=${note.id}>`).data(note);
     const $span = $("<span>").text(note.title);
     const $delBtn = $(
