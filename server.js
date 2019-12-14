@@ -13,26 +13,40 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// * Create a set of routes for displaying the HTML pages
-// =========================================
-// * GET `/notes` - Should return the `notes.html` file.
-app.get("/notes", function(req, res) {
-    res.sendFile(path.join(__dirname, "public/notes.html"));
-});
-// * GET `*` - Should return the `index.html` file
-app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname, "public/index.html"));
-});
-
 // ONLY BEING ADDED FOR LOCAL TESTING PURPOSES!!!!---------------------
+// 3000 is what I set the default port value to
+// used this for inspiration https://gist.github.com/ryanflorence/701407
 if(PORT === 3000){
-    // * GET `*` - Should return the `index.html` file
+    // code doesn't work locally because looking for LOCALHOST:3000/assets/, which doesn't exist.
+    // the index.html and note.html rely on the index.js and style.css files.
+    // * GET is handling anything that starts with /assets. 
+    // req.url is added onto the directory name.
     app.get("/assets/*", function(req, res) {
         res.sendFile(path.join(__dirname, `/public/${req.url}`))
-        console.log("annoying issue occurred")
-        console.log(req.url);
+        // console.log("annoying issue occurred")
+        // console.log(req.url);
     });
-
+// * Create a set of routes for displaying the HTML pages
+// =========================================
+    app.get("/notes", function(req, res) {
+        res.sendFile(path.join(__dirname, "public/notes.html"));
+    });
+    // * GET `*` - Should return the `index.html` file
+    app.get("/", function(req, res) {
+        res.sendFile(path.join(__dirname, "public/index.html"));
+    });
+}else{
+    // This is how it will work when not running locally
+    // * Create a set of routes for displaying the HTML pages
+    // =========================================
+    // * GET `/notes` - Should return the `notes.html` file.
+    app.get("/notes", function(req, res) {
+        res.sendFile(path.join(__dirname, "public/notes"));
+    });
+    // * GET `*` - Should return the `index.html` file
+    app.get("/", function(req, res) {
+        res.sendFile(path.join(__dirname, "public/index"));
+    });
 }
 // --------------------------------------------------------------------
 
@@ -40,9 +54,15 @@ if(PORT === 3000){
 // Create New Reservation - takes in JSON input
 //   * GET `/api/notes` - Should read the `db.json` file and return all saved notes as JSON.
 app.get("/api/notes", function(req, res) {
-    
+    fs.readFile('db/db.json', 'utf8', function(err, data){
+        if(err){
+            console.log(err)
+            return
+        }
+        // sends data in db to site. readFile already turns db data into a string, so no need for req.json
+        res.send(data);
+    });
     // console.log(testArray)
-    return res.json([{"title":"Test Title","text":"Test text"}]);
 });
 // * The following API routes should be created:
 
