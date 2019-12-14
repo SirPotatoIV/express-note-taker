@@ -69,23 +69,32 @@ app.get("/api/notes", function(req, res){
 // Probably a better way to get the new note added in with like lastIndex of so I didn't need to do so much JSON, but this works.
 app.post("/api/notes", function(req, res){
     const newNote = req.body;
+    let updatedNotesStringified = "";
     // A new note is created so increase the note id by 1.
     noteIdMaker++;
     newNote.id = noteIdMaker;
     // gets the data from db.json
+    if(newNote){
     fs.readFile('db/db.json', 'utf8', function(err, notesStringified){
         if(err){
-            console.log(err)
+            console.log(`Error occurred during readfile in post notes: ${err}`)
             return
         }
+        console.log(`Current Notes: ${notesStringified}`)
         // Parses the data from db.json and stores it in notes.
-        const notes = JSON.parse(notesStringified)
-        // Combines new note and current notes into a single array by spreading notes into a new array called combined notes and adding newNote.
-        const combinedNotes = [...notes,newNote]
-        // Stringifies combined notes so it can be stored as db.json
-        const combinedNotesStringified = JSON.stringify(combinedNotes);
-        // Writes over previous db.json with new db.json data.
-        fs.writeFile('db/db.json', combinedNotesStringified, function(err){
+        if(notesStringified){
+            console.log(`if statement occured`)
+            const notes = [JSON.parse(notesStringified)]
+            // Combines new note and current notes into a single array by spreading notes into a new array called combined notes and adding newNote.
+            const combinedNotes = [...notes,newNote]
+            // Stringifies combined notes so it can be stored as db.json
+            updatedNotesStringified = JSON.stringify(combinedNotes);
+            // Writes over previous db.json with new db.json data.
+        }else{
+            updatedNotesStringified = JSON.stringify(newNote);
+        }
+
+        fs.writeFile('db/db.json', updatedNotesStringified, function(err){
             if(err){
                 console.log(err)
                 return
@@ -95,8 +104,9 @@ app.post("/api/notes", function(req, res){
             res.send(newNote);
         });
     });
-    
-    // console.log(req.body)
+}else{
+    res.send("No saved notes")
+}
 })
 
 //   * DELETE `/api/notes/:id` - Should recieve a query paramter containing the id of a note to delete.
