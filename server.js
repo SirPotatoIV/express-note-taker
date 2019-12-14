@@ -72,14 +72,19 @@ app.post("/api/notes", function(req, res){
     // A new note is created so increase the note id by 1.
     noteIdMaker++;
     newNote.id = noteIdMaker;
+    // gets the data from db.json
     fs.readFile('db/db.json', 'utf8', function(err, notesStringified){
         if(err){
             console.log(err)
             return
         }
+        // Parses the data from db.json and stores it in notes.
         const notes = JSON.parse(notesStringified)
+        // Combines new note and current notes into a single array by spreading notes into a new array called combined notes and adding newNote.
         const combinedNotes = [...notes,newNote]
+        // Stringifies combined notes so it can be stored as db.json
         const combinedNotesStringified = JSON.stringify(combinedNotes);
+        // Writes over previous db.json with new db.json data.
         fs.writeFile('db/db.json', combinedNotesStringified, function(err){
             if(err){
                 console.log(err)
@@ -98,10 +103,46 @@ app.post("/api/notes", function(req, res){
 // :id stores the value in the path in the property of req.params. This is feature of express ... I think
 app.delete('/api/notes/:id', function (req, res) {
     // Stores the of the note that should be deleted.
-    const noteToDelete = req.params.id;
-    console.log(noteToDelete)
+    // -- id is a string so it needs to be converted to a integer
+    const noteToDeleteId = parseInt(req.params.id);
+    console.log(noteToDeleteId)
     // Sends a response back to the page that the delete request was completed
-    res.send('Got a DELETE request at /user')
+
+    
+    // gets the data from db.json
+    fs.readFile('db/db.json', 'utf8', function(err, notesStringified){
+        if(err){
+            console.log(err)
+            return
+        }
+        // Parses the data from db.json and stores it in notes.
+        const notes = JSON.parse(notesStringified)
+        console.log(notes);
+        // Combines new note and current notes into a single array by spreading notes into a new array called combined notes and adding newNote.
+        for(let i = 0; i < notes.length; i++){
+            console.log("notes.length", notes.length)
+            console.log("notes i",notes[i])
+            console.log("notes id", notes[i].id)
+            if(notes[i].id === noteToDeleteId){
+                notesRemoved = notes.splice(i,1)
+                console.log("note deleted.", notes)
+            }
+            
+        }
+        
+        
+        // // Writes over previous db.json with new db.json data.
+        // fs.writeFile('db/db.json', combinedNotesStringified, function(err){
+            //     if(err){
+                //         console.log(err)
+                //         return
+                //     }
+                
+                //     // Homework says to send the new note back to the note.html, but currently unsure what it does with it. Possibly just used for tracking or troubleshooting purposes
+                //     res.send(newNote);
+                // });
+                res.send('Got a DELETE request at /user')
+    });
   })
 // This means you'll need to find a way to give each note a unique `id` when it's saved. 
 // In order to delete a note, you'll need to read all notes from the `db.json` file, remove the note with the given `id` property, 
