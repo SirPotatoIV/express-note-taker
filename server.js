@@ -35,8 +35,13 @@ if(PORT === 3000){
         res.sendFile(path.join(__dirname, "public/notes.html"));
     });
     // * GET `*` - Should return the `index.html` file
+    // THIS IS ALSO BEING SENT TO WEBSITE BECAUSE /assets/* and /* WOULD BE THE SAME
+    // -----
+    // -----
+    // -----
     app.get("/", function(req, res) {
         res.sendFile(path.join(__dirname, "public/index.html"));
+        console.log(path.join(__dirname, "public/index.html"))
     });
 }else{
     // This is how it will work when not running locally
@@ -44,11 +49,11 @@ if(PORT === 3000){
     // =========================================
     // * GET `/notes` - Should return the `notes.html` file.
     app.get("/notes", function(req, res) {
-        res.sendFile(path.join(__dirname, "public/notes"));
+        res.sendFile(path.join(__dirname, "public/notes.html"));
     });
     // * GET `*` - Should return the `index.html` file
     app.get("/", function(req, res) {
-        res.sendFile(path.join(__dirname, "public/index"));
+        res.sendFile(path.join(__dirname, "public/index.html"));
     });
 }
 // --------------------------------------------------------------------

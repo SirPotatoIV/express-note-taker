@@ -108,7 +108,8 @@ var handleRenderSaveBtn = function() {
 const renderNoteList = function(notesStringified) {
   $noteList.empty();
   // Added because there was no point when the index.js pasrsed the JSON
-  notes = JSON.parse(notesStringified)
+  console.log(notesStringified)
+  const notes = JSON.parse(notesStringified)
   let noteListItems = [];
 
   for (let i = 0; i < notes.length; i++) {
