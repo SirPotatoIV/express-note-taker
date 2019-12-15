@@ -58,6 +58,14 @@ if(PORT === 3000){
 }
 // --------------------------------------------------------------------
 
+// Serve static files
+// -- https://stackoverflow.com/questions/5924072/express-js-cant-get-my-static-files-why
+// -- https://expressjs.com/en/starter/static-files.html
+// =================================================
+
+app.use(express.static('public'))
+
+// =================================================
 //   * GET `/api/notes` - Should read the `db.json` file and return all saved notes as JSON.
 app.get("/api/notes", function(req, res){
     fs.readFile('db/db.json', 'utf8', function(err, data){
