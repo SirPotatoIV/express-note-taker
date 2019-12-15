@@ -16,47 +16,20 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// ONLY BEING ADDED FOR LOCAL TESTING PURPOSES!!!!---------------------
-// 3000 is what I set the default port value to
-// used this for inspiration https://gist.github.com/ryanflorence/701407
-if(PORT === 3000){
-    // code doesn't work locally because looking for LOCALHOST:3000/assets/, which doesn't exist.
-    // the index.html and note.html rely on the index.js and style.css files.
-    // * GET is handling anything that starts with /assets. 
-    // req.url is added onto the directory name.
-    app.get("/assets/*", function(req, res) {
-        res.sendFile(path.join(__dirname, `/public/${req.url}`))
-        // console.log("annoying issue occurred")
-        // console.log(req.url);
-    });
+
+
 // * Create a set of routes for displaying the HTML pages
 // =========================================
-    app.get("/notes", function(req, res) {
-        res.sendFile(path.join(__dirname, "public/notes.html"));
-    });
-    // * GET `*` - Should return the `index.html` file
-    // THIS IS ALSO BEING SENT TO WEBSITE BECAUSE /assets/* and /* WOULD BE THE SAME
-    // -----
-    // -----
-    // -----
-    app.get("/", function(req, res) {
-        res.sendFile(path.join(__dirname, "public/index.html"));
-        console.log(path.join(__dirname, "public/index.html"))
-    });
-}else{
-    // This is how it will work when not running locally
-    // * Create a set of routes for displaying the HTML pages
-    // =========================================
-    // * GET `/notes` - Should return the `notes.html` file.
-    app.get("/notes", function(req, res) {
-        res.sendFile(path.join(__dirname, "public/notes.html"));
-    });
-    // * GET `*` - Should return the `index.html` file
-    app.get("/", function(req, res) {
-        res.sendFile(path.join(__dirname, "public/index.html"));
-    });
-}
-// --------------------------------------------------------------------
+// * GET `/notes` - Should return the `notes.html` file.
+app.get("/notes", function(req, res) {
+    res.sendFile(path.join(__dirname, "public/notes.html"));
+});
+// * GET `*` - Should return the `index.html` file
+app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname, "public/index.html"));
+});
+
+// ==========================================
 
 // Serve static files
 // -- https://stackoverflow.com/questions/5924072/express-js-cant-get-my-static-files-why
@@ -66,6 +39,10 @@ if(PORT === 3000){
 app.use(express.static('public'))
 
 // =================================================
+
+// Create requests for all the requests made by index.js
+// -- This includes get, post, and delete.
+//==================================================
 //   * GET `/api/notes` - Should read the `db.json` file and return all saved notes as JSON.
 app.get("/api/notes", function(req, res){
     fs.readFile('db/db.json', 'utf8', function(err, data){
@@ -168,17 +145,6 @@ app.delete('/api/notes/:id', function (req, res) {
             res.send('Got a DELETE request at /user')
     });
   })
-// This means you'll need to find a way to give each note a unique `id` when it's saved. 
-// In order to delete a note, you'll need to read all notes from the `db.json` file, remove the note with the given `id` property, 
-// and then rewrite the notes to the `db.json` file.
-
-
-// * The following API routes should be created:
-
-
-
-
-
 
 
 // Starts the server to begin listening
