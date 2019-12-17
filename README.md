@@ -12,10 +12,10 @@ GIF demonstrating the Note Taker app in action.
 ![animation of Note Taker App being used](public/assets/images/note-taker-express-in-action.gif)
 
 Image of the initial view when you visit the app.
-![image of what the user sees when they visit the app](public/assets/images/home-page-view.png)
+![image of what the user sees when they visit the app](public/assets/images/home-page-view.PNG)
 
 Image of the note taking page.
-![image of what the user sees when they go to the note taking page](public/assets/images/note-page-view.png)
+![image of what the user sees when they go to the note taking page](public/assets/images/note-page-view.PNG)
 
 ## Installation 
 Keep all files in a single folder and do not move files around within the folder. Can be run on a locally created server by installing all the dependancies, or installed on a server. You must also have node.js and perform a npm install to bring in all the necessary node modules. Use server.js as the file to initialize the app.
